@@ -27,7 +27,7 @@ function createContext(): Context {
     const project = getVariable("System.TeamProjectId");
 
     const variable = tl.getInput("variable", true) || "FilesChanged";
-    const glob = tl.getInput("glob") || "**";
+    const rules = tl.getInput("rules") || "**";
     const isOutput = tl.getBoolInput("isOutput");
     const cwd = tl.getInput("cwd") || tl.cwd();
     const verbose = tl.getBoolInput("verbose");
@@ -36,7 +36,7 @@ function createContext(): Context {
         project,
         inputs: {
             variable,
-            glob,
+            rules,
             isOutput,
             cwd,
             verbose
@@ -84,13 +84,13 @@ async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verb
     return files;
 }
 
-function hasTargetChanged(files: string[] | undefined, { inputs: { glob, variable, verbose } }: Context): boolean {
+function hasTargetChanged(files: string[] | undefined, { inputs: { rules, variable, verbose } }: Context): boolean {
     if (!files) return true;
     if (!files.length) return false;
 
     logVerbose("> Filtering files using glob rules", { verbose });
 
-    const filtered = filterFiles(files, glob);
+    const filtered = filterFiles(files, rules);
     if (filtered.size > 0) {
         logVerbose(`>> ${filtered.size} files changed since last succeeded build, setting "${variable}" to "true"`, { verbose });
         return true;
@@ -137,7 +137,7 @@ interface Context {
 
     inputs: {
         variable: string;
-        glob: string;
+        rules: string;
         isOutput: boolean;
         cwd: string;
         verbose: boolean;

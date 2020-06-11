@@ -23,19 +23,20 @@
     ],
     "inputs": [
         {
-            "name": "glob",
+            "name": "rules",
             "type": "multiLine",
-            "label": "Filter",
+            "label": "Filter rules",
             "defaultValue": "**",
-            "helpMarkDown": "A glob value per line to filter files that needs to be checked"
+            "helpMarkDown": "A glob value per line to filter files that needs to be checked. Also allows to define multiple variables."
         },
         {
             "name": "variable",
             "type": "string",
-            "label": "Variable name",
+            "groupName": "advanced",
+            "label": "Default variable",
             "defaultValue": "HasChanged",
             "required": true,
-            "helpMarkDown": "The name of the output variable to set to be available in next steps/jobs/stages"
+            "helpMarkDown": "The name of the default output variable to set to be available in next steps/jobs/stages."
         },
         {
             "name": "isOutput",
@@ -51,7 +52,7 @@
             "type": "filePath",
             "groupName": "advanced",
             "label": "Working directory",
-            "helpMarkDown": "Change the current working directory"
+            "helpMarkDown": "Change the current working directory."
         },
         {
             "name": "verbose",
@@ -59,7 +60,7 @@
             "groupName": "advanced",
             "label": "Verbose logging",
             "defaultValue": false,
-            "helpMarkDown": "Enable verbose logging"
+            "helpMarkDown": "Enable verbose logging."
         }
     ],
     "execution": {

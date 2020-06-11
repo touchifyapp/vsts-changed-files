@@ -16,7 +16,7 @@ setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
 setVariable("Build.SourceVersion", SOURCE_VERSION);
 
-tmr.setInput("glob", "**");
+tmr.setInput("rules", "**");
 tmr.setInput("variable", "HasChanged");
 tmr.setInput("isOutput", "true");
 tmr.setInput("verbose", "true");

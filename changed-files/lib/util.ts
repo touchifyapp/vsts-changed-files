@@ -58,8 +58,8 @@ export async function gitDiff(from: string, to: string, { cwd, verbose }: { cwd?
     });
 }
 
-export function filterFiles(files: string[], glob: string): Set<string> {
-    const patterns = glob.split(/\r?\n/);
+export function filterFiles(files: string[], rules: string): Set<string> {
+    const patterns = rules.split(/\r?\n/);
     const res = new Set<string>();
 
     for (const pattern of patterns) {

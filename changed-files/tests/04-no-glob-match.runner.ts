@@ -16,7 +16,7 @@ setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
 setVariable("Build.SourceVersion", SOURCE_VERSION);
 
-tmr.setInput("glob", "tests/**/*.ts");
+tmr.setInput("rules", "tests/**/*.ts");
 tmr.setInput("variable", "HasChanged");
 tmr.setInput("isOutput", "true");
 tmr.setInput("verbose", "true");
