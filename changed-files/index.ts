@@ -1,11 +1,12 @@
 import * as tl from "azure-pipelines-task-lib/task";
-import * as azdev from "azure-devops-node-api";
 
-import { Build, BuildResult, BuildQueryOrder } from "azure-devops-node-api/interfaces/BuildInterfaces";
 import type { IBuildApi } from "azure-devops-node-api/BuildApi";
 
+import { gitDiff } from "./lib/git-diff";
 import { parseRules } from "./lib/parser";
-import { getVariable, setVariable, gitDiff, logVerbose, matchFiles, fromEntries } from "./lib/util";
+import { matchFiles } from "./lib/matcher";
+import { getLatestBuild, createClient } from "./lib/builds";
+import { getVariable, setVariable, fromEntries, logVerbose } from "./lib/util";
 
 run();
 
@@ -49,16 +50,14 @@ async function initializeClient(): Promise<IBuildApi> {
     const orgUri = getVariable("System.TeamFoundationCollectionUri");
     const accessToken = getVariable("System.AccessToken");
 
-    const auth = azdev.getBearerHandler(accessToken);
-    const connection = new azdev.WebApi(orgUri, auth);
-
-    return connection.getBuildApi();
+    return createClient(orgUri, accessToken);
 }
 
 async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verbose } }: Context): Promise<string[] | undefined> {
     logVerbose("> Fetching latest succeeded build", { verbose });
 
-    const latestBuild = await getLatestBuild(client, project);
+    const definitionId = parseInt(getVariable("System.DefinitionId"));
+    const latestBuild = await getLatestBuild(client, project, definitionId);
 
     if (!latestBuild || !latestBuild.sourceVersion) {
         logVerbose(">> No previous build found: consider that all files changed!", { verbose });
@@ -111,37 +110,6 @@ function setVariables(changes: Record<string, boolean>, { inputs: { isOutput, ve
         setVariable(variable, String(hasChanged), isOutput);
     }
 }
-
-async function getLatestBuild(client: IBuildApi, project: string): Promise<Build | undefined> {
-    const definitionId = parseInt(getVariable("System.DefinitionId"));
-
-    const [latestBuild] = await client.getBuilds(
-        project,
-        [definitionId],
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        BuildResult.Succeeded,
-        undefined,
-        undefined,
-        1,
-        undefined,
-        undefined,
-        undefined,
-        BuildQueryOrder.FinishTimeDescending
-    );
-
-    return latestBuild;
-}
-
-// async function getCurrentBuild(client: IBuildApi, project: string): Promise<Build> {
-//     const currentBuildId = parseInt(getVariable("System.DefinitionId"));
-//     return client.getBuild(project, currentBuildId);
-// }
 
 interface Context {
     project: string;
