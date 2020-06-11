@@ -1,0 +1,31 @@
+parser: "@typescript-eslint/parser"
+
+parserOptions:
+  project:
+    - ./tsconfig.json
+env:
+  node: true
+
+plugins:
+  - "@typescript-eslint"
+
+extends: 
+  - "eslint:recommended"
+  - "plugin:@typescript-eslint/eslint-recommended"
+  - "plugin:@typescript-eslint/recommended"
+
+rules:
+  "@typescript-eslint/no-use-before-define":
+    - "error"
+    - functions: false
+      classes: false
+      typedefs: false
+
+  "@typescript-eslint/explicit-function-return-type":
+    - "error"
+    - allowExpressions: true
+
+  "@typescript-eslint/array-type":
+    - "error"
+    - default: "array-simple"
+      readonly: "array-simple"

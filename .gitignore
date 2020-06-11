@@ -1,0 +1,9 @@
+# Built files
+*.js
+*.map
+*.d.ts
+!*.config.js
+.taskkey
+
+# Dependencies
+node_modules/

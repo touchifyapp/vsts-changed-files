@@ -1,0 +1,42 @@
+{
+  "name": "vsts-changed-files",
+  "version": "0.0.0",
+  "description": "Azure DevOps pipeline task to get changed files since last build",
+  "author": "Touchify (dev@touchify.co)",
+  "license": "MIT",
+  "private": true,
+  "main": "index.js",
+  "homepage": "https://github.com/touchifyapp/vsts-changed-files#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/touchifyapp/vsts-changed-files.git"
+  },
+  "bugs": {
+    "url": "https://github.com/touchifyapp/vsts-changed-files/issues"
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "npm run lint && npm run build && jest",
+    "jest": "jest",
+    "lint": "eslint --ext ts changed-files/**/*.ts"
+  },
+  "dependencies": {
+    "azure-devops-node-api": "^10.1.1",
+    "azure-pipelines-task-lib": "^2.9.5",
+    "minimatch": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/minimatch": "^3.0.3",
+    "@types/node": "^12.12.47",
+    "@types/q": "^1.5.4",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
+    "eslint": "^7.2.0",
+    "jest": "^26.0.1",
+    "nock": "^12.0.3",
+    "sync-request": "^6.1.0",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.5"
+  }
+}

@@ -1,0 +1,86 @@
+{
+    "manifestVersion": 1,
+    "id": "vsts-changed-files",
+    "version": "0.0.0",
+    "name": "Changed files",
+    "description": "Pipeline task to get changed files since last build.",
+    "publisher": "Touchify",
+    "public": true,
+    "icons": {
+        "default": "images/icon.png",
+        "large": "images/icon-large.png"
+    },
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "screenshots": [
+        {
+            "path": "screenshots/screen-add.png"
+        },
+        {
+            "path": "screenshots/screen-simple.png"
+        },
+        {
+            "path": "screenshots/screen-advanced.png"
+        }
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        },
+        "license": {
+            "path": "LICENSE"
+        }
+    },
+    "links": {
+        "getstarted": {
+            "uri": "https://github.com/touchifyapp/vsts-changed-files"
+        },
+        "support": {
+            "uri": "https://github.com/touchifyapp/vsts-changed-files/issues"
+        },
+        "repository": {
+            "uri": "https://github.com/touchifyapp/vsts-changed-files"
+        },
+        "issues": {
+            "uri": "https://github.com/touchifyapp/vsts-changed-files/issues"
+        }
+    },
+    "branding": {
+        "color": "#f39200",
+        "theme": "dark"
+    },
+    "tags": [
+        "utility",
+        "changed",
+        "files",
+        "changeset",
+        "condition",
+        "variable",
+        "output",
+        "optimization",
+        "performance"
+    ],
+    "files": [
+        {
+            "path": "changed-files"
+        }
+    ],
+    "contributions": [
+        {
+            "id": "vsts-changed-files",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "changed-files"
+            }
+        }
+    ]
+}
