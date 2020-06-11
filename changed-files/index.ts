@@ -4,7 +4,8 @@ import * as azdev from "azure-devops-node-api";
 import { Build, BuildResult, BuildQueryOrder } from "azure-devops-node-api/interfaces/BuildInterfaces";
 import type { IBuildApi } from "azure-devops-node-api/BuildApi";
 
-import { getVariable, setVariable, filterFiles, gitDiff, logVerbose } from "./lib/util";
+import { parseRules } from "./lib/parser";
+import { getVariable, setVariable, gitDiff, logVerbose, matchFiles, fromEntries } from "./lib/util";
 
 run();
 
@@ -14,9 +15,9 @@ async function run(): Promise<void> {
         const client = await initializeClient();
 
         const files = await getChangedFiles(client, context);
-        const hasChanged = hasTargetChanged(files, context);
+        const changes = getChangesPerVariable(files, context);
 
-        setVariable(context.inputs.variable, String(hasChanged), context.inputs.isOutput);
+        setVariables(changes, context);
     }
     catch (err) {
         tl.setResult(tl.TaskResult.Failed, err.message);
@@ -84,20 +85,30 @@ async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verb
     return files;
 }
 
-function hasTargetChanged(files: string[] | undefined, { inputs: { rules, variable, verbose } }: Context): boolean {
-    if (!files) return true;
-    if (!files.length) return false;
+function getChangesPerVariable(files: string[] | undefined, { inputs: { rules, variable, verbose } }: Context): Record<string, boolean> {
+    const groupedRules = parseRules(rules, variable);
+    const categories = Object.keys(groupedRules).filter(cat => groupedRules[cat].length > 0);
+
+    if (!files) {
+        return fromEntries(categories.map(c => [c, true]));
+    }
+
+    if (!files.length) {
+        return fromEntries(categories.map(c => [c, false]));
+    }
 
     logVerbose("> Filtering files using glob rules", { verbose });
 
-    const filtered = filterFiles(files, rules);
-    if (filtered.size > 0) {
-        logVerbose(`>> ${filtered.size} files changed since last succeeded build, setting "${variable}" to "true"`, { verbose });
-        return true;
-    }
-    else {
-        logVerbose(`>> No file changed since last succeeded build, setting "${variable}" to "false"`, { verbose });
-        return false;
+    return fromEntries(
+        categories.map(cat => [cat, matchFiles(files, groupedRules[cat])])
+    );
+}
+
+function setVariables(changes: Record<string, boolean>, { inputs: { isOutput, verbose } }: Context): void {
+    for (const [variable, hasChanged] of Object.entries(changes)) {
+        logVerbose(`>> ${variable.toUpperCase()}: ${hasChanged ? "Changes" : "No change"} detected since last succeeded build, setting "${variable}" to "${hasChanged}"`, { verbose });
+
+        setVariable(variable, String(hasChanged), isOutput);
     }
 }
 

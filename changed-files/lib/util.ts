@@ -33,6 +33,12 @@ export function logDebug(message: string): void {
     console.log(cmd.toString());
 }
 
+export function fromEntries<T>(entries: Array<[string, T]>): Record<string, T> {
+    const res: Record<string, T> = {};
+    for (const [key, value] of entries) res[key] = value;
+    return res;
+}
+
 export async function gitDiff(from: string, to: string, { cwd, verbose }: { cwd?: string; verbose?: boolean } = {}): Promise<string[]> {
     const res: string[] = [];
 
@@ -58,14 +64,11 @@ export async function gitDiff(from: string, to: string, { cwd, verbose }: { cwd?
     });
 }
 
-export function filterFiles(files: string[], rules: string): Set<string> {
-    const patterns = rules.split(/\r?\n/);
-    const res = new Set<string>();
-
-    for (const pattern of patterns) {
-        const filtered = minimatch.match(files, pattern);
-        for (const f of filtered) res.add(f);
+export function matchFiles(files: string[], rules: string[]): boolean {
+    for (const pattern of rules) {
+        const matched = minimatch.match(files, pattern);
+        if (matched.length > 0) return true;
     }
 
-    return res;
+    return false;
 }
