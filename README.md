@@ -1,5 +1,7 @@
 # Azure DevOps Task: Changed Files
 
+![CI](https://github.com/touchifyapp/vsts-changed-files/workflows/CI/badge.svg?event=push)
+
 Pipeline task to get changed files since last succeeded build.
 
 ## Installation
