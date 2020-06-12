@@ -1,71 +1,71 @@
 {
-    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-    "id": "501f2450-cb2a-4911-9385-2e61c8808137",
-    "name": "ChangedFiles",
-    "friendlyName": "Check Changed Files",
-    "description": "Pipeline task to check if some files changed since last build",
-    "helpUrl": "https://marketplace.visualstudio.com/items?itemName=touchify.vsts-changed-files",
-    "helpMarkDown": "[More Information about this task](https://marketplace.visualstudio.com/items?itemName=touchify.vsts-changed-files)",
-    "category": "Utility",
-    "author": "Touchify",
-    "version": {
-        "Major": 0,
-        "Minor": 1,
-        "Patch": 0
-    },
-    "instanceNameFormat": "Check changed files: $(variable)",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
-    "inputs": [
-        {
-            "name": "rules",
-            "type": "multiLine",
-            "label": "Filter rules",
-            "defaultValue": "**",
-            "helpMarkDown": "A glob value per line to filter files that needs to be checked. Also allows to define multiple variables."
-        },
-        {
-            "name": "variable",
-            "type": "string",
-            "groupName": "advanced",
-            "label": "Default variable",
-            "defaultValue": "HasChanged",
-            "required": true,
-            "helpMarkDown": "The name of the default output variable to set to be available in next steps/jobs/stages."
-        },
-        {
-            "name": "isOutput",
-            "type": "boolean",
-            "groupName": "advanced",
-            "label": "Is output",
-            "defaultValue": true,
-            "required": true,
-            "helpMarkDown": "Are variables available in next stages?"
-        },
-        {
-            "name": "cwd",
-            "type": "filePath",
-            "groupName": "advanced",
-            "label": "Working directory",
-            "helpMarkDown": "Change the current working directory."
-        },
-        {
-            "name": "verbose",
-            "type": "boolean",
-            "groupName": "advanced",
-            "label": "Verbose logging",
-            "defaultValue": false,
-            "helpMarkDown": "Enable verbose logging."
-        }
-    ],
-    "execution": {
-        "Node10": {
-            "target": "index.js"
-        }
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "501f2450-cb2a-4911-9385-2e61c8808137",
+  "name": "ChangedFiles",
+  "friendlyName": "Check Changed Files",
+  "description": "Pipeline task to check if some files changed since last build",
+  "helpUrl": "https://marketplace.visualstudio.com/items?itemName=touchify.vsts-changed-files",
+  "helpMarkDown": "[More Information about this task](https://marketplace.visualstudio.com/items?itemName=touchify.vsts-changed-files)",
+  "category": "Utility",
+  "author": "Touchify",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 1
+  },
+  "instanceNameFormat": "Check changed files: $(variable)",
+  "groups": [
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
     }
+  ],
+  "inputs": [
+    {
+      "name": "rules",
+      "type": "multiLine",
+      "label": "Filter rules",
+      "defaultValue": "**",
+      "helpMarkDown": "A glob value per line to filter files that needs to be checked. Also allows to define multiple variables."
+    },
+    {
+      "name": "variable",
+      "type": "string",
+      "groupName": "advanced",
+      "label": "Default variable",
+      "defaultValue": "HasChanged",
+      "required": true,
+      "helpMarkDown": "The name of the default output variable to set to be available in next steps/jobs/stages."
+    },
+    {
+      "name": "isOutput",
+      "type": "boolean",
+      "groupName": "advanced",
+      "label": "Is output",
+      "defaultValue": true,
+      "required": true,
+      "helpMarkDown": "Are variables available in next stages?"
+    },
+    {
+      "name": "cwd",
+      "type": "filePath",
+      "groupName": "advanced",
+      "label": "Working directory",
+      "helpMarkDown": "Change the current working directory."
+    },
+    {
+      "name": "verbose",
+      "type": "boolean",
+      "groupName": "advanced",
+      "label": "Verbose logging",
+      "defaultValue": false,
+      "helpMarkDown": "Enable verbose logging."
+    }
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "vsts-changed-files",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Azure DevOps pipeline task to get changed files since last build",
   "author": "Touchify (dev@touchify.co)",
   "license": "MIT",
@@ -19,7 +19,10 @@
     "test": "npm run lint && npm run build && jest",
     "jest": "jest",
     "lint": "eslint --ext ts changed-files/**/*.ts",
-    "pack": "npm run build && tfx extension create --manifest-globs vss-extension.json",
+    "pack": "npm run build && npm run pack:modules && npm run pack:extension && npm run pack:clean",
+    "pack:modules": "cp package.json changed-files && cp package-lock.json changed-files && cd changed-files && npm ci --prod",
+    "pack:extension": "tfx extension create --manifest-globs vss-extension.json",
+    "pack:clean": "rm changed-files/package.json && rm changed-files/package-lock.json && rm -r changed-files/node_modules",
     "preversion": "npm test",
     "version": "node scripts/version.js && git add .",
     "postversion": "git push && git push --tags"

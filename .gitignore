@@ -6,5 +6,8 @@
 !*.config.js
 !scripts/*.js
 
+# Publish
+*.vsix
+
 # Dependencies
 node_modules/

@@ -1,89 +1,86 @@
 {
-    "manifestVersion": 1,
-    "id": "vsts-changed-files",
-    "version": "0.0.0",
-    "name": "Changed files",
-    "description": "Pipeline task to get changed files since last build.",
-    "publisher": "Touchify",
-    "public": true,
-    "icons": {
-        "default": "images/icon.png",
-        "large": "images/icon-large.png"
+  "manifestVersion": 1,
+  "id": "vsts-changed-files",
+  "version": "0.0.1",
+  "name": "Changed files",
+  "description": "Pipeline task to get changed files since last build.",
+  "publisher": "Touchify",
+  "public": true,
+  "icons": {
+    "default": "images/icon.png",
+    "large": "images/icon-large.png"
+  },
+  "categories": [
+    "Azure Pipelines"
+  ],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "images/screen-simple.jpg"
     },
-    "categories": [
-        "Azure Pipelines"
-    ],
-    "targets": [
-        {
-            "id": "Microsoft.VisualStudio.Services"
-        }
-    ],
-    "screenshots": [
-        {
-            "path": "images/screen-add.png"
-        },
-        {
-            "path": "images/screen-simple.png"
-        },
-        {
-            "path": "images/screen-advanced.png"
-        },
-        {
-            "path": "images/screen-muti.png"
-        }
-    ],
-    "content": {
-        "details": {
-            "path": "README.md"
-        },
-        "license": {
-            "path": "LICENSE"
-        }
+    {
+      "path": "images/screen-advanced.jpg"
     },
-    "links": {
-        "getstarted": {
-            "uri": "https://github.com/touchifyapp/vsts-changed-files"
-        },
-        "support": {
-            "uri": "https://github.com/touchifyapp/vsts-changed-files/issues"
-        },
-        "repository": {
-            "uri": "https://github.com/touchifyapp/vsts-changed-files"
-        },
-        "issues": {
-            "uri": "https://github.com/touchifyapp/vsts-changed-files/issues"
-        }
+    {
+      "path": "images/screen-multi.jpg"
+    }
+  ],
+  "content": {
+    "details": {
+      "path": "README.md"
     },
-    "branding": {
-        "color": "#f39200",
-        "theme": "dark"
+    "license": {
+      "path": "LICENSE"
+    }
+  },
+  "links": {
+    "getstarted": {
+      "uri": "https://github.com/touchifyapp/vsts-changed-files"
     },
-    "tags": [
-        "utility",
-        "changed",
-        "files",
-        "changeset",
-        "condition",
-        "variable",
-        "output",
-        "optimization",
-        "performance"
-    ],
-    "files": [
-        {
-            "path": "changed-files"
-        }
-    ],
-    "contributions": [
-        {
-            "id": "vsts-changed-files",
-            "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
-            "properties": {
-                "name": "changed-files"
-            }
-        }
-    ]
+    "support": {
+      "uri": "https://github.com/touchifyapp/vsts-changed-files/issues"
+    },
+    "repository": {
+      "uri": "https://github.com/touchifyapp/vsts-changed-files"
+    },
+    "issues": {
+      "uri": "https://github.com/touchifyapp/vsts-changed-files/issues"
+    }
+  },
+  "branding": {
+    "color": "#f2f2f2",
+    "theme": "light"
+  },
+  "tags": [
+    "utility",
+    "changed",
+    "files",
+    "changeset",
+    "condition",
+    "variable",
+    "output",
+    "optimization",
+    "performance"
+  ],
+  "files": [
+    {
+      "path": "changed-files"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "vsts-changed-files",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "changed-files"
+      }
+    }
+  ]
 }
