@@ -18,7 +18,8 @@
     "build": "tsc -p .",
     "test": "npm run lint && npm run build && jest",
     "jest": "jest",
-    "lint": "eslint --ext ts changed-files/**/*.ts"
+    "lint": "eslint --ext ts changed-files/**/*.ts",
+    "pack": "npm run build && tfx extension create --manifest-globs vss-extension.json"
   },
   "dependencies": {
     "azure-devops-node-api": "^10.1.1",

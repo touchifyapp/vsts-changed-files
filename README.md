@@ -70,7 +70,7 @@ jobs:
 
 ## Options
 
-* __Filter rules__: Filter files to check changes for.  _Default:_ `**` _(match all files)_.
+* __rules__: Filter files to check changes for.  _Default:_ `**` _(match all files)_.
 * __variable__: The name of the default output variable to set to be available in next steps/jobs/stages. _Default:_ `HasChanged`.
 * __isOutput__: Are variables available in next stages?  _Default:_ `true`.
 * __cwd__: Change the current working directory. _Default:_ `$(System.DefaultWorkingDirectory)`
