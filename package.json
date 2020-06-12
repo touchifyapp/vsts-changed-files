@@ -1,6 +1,6 @@
 {
   "name": "vsts-changed-files",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Azure DevOps pipeline task to get changed files since last build",
   "author": "Touchify (dev@touchify.co)",
   "license": "MIT",
