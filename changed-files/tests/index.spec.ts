@@ -74,6 +74,7 @@ describe("vsts-changed-files", () => {
             expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
             expect(tr.stderr).toBeFalsy();
         });
+
     });
 
     describe("inputs", () => {
@@ -103,6 +104,64 @@ describe("vsts-changed-files", () => {
             expect(tr.errorIssues).toHaveLength(0);
 
             expect(tr.stdout).toContain("##vso[task.setvariable variable=CustomVar;]true");
+            expect(tr.stderr).toBeFalsy();
+        });
+
+    });
+
+    describe("multiple variables", () => {
+
+        test("should allow multiple variable definitions", () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, "20-multi-with-default.runner.js"));
+            tr.run();
+
+            expect(tr.succeeded).toBe(true);
+
+            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.warningIssues).toHaveLength(0);
+            expect(tr.errorIssues).toHaveLength(0);
+
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=DocumentationChanged;isOutput=true;]true");
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=TestsChanged;isOutput=true;]false");
+            expect(tr.stderr).toBeFalsy();
+        });
+
+        test("should not set default variable if empty", () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, "21-multi-without-default.runner.js"));
+            tr.run();
+
+            expect(tr.succeeded).toBe(true);
+
+            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.warningIssues).toHaveLength(0);
+            expect(tr.errorIssues).toHaveLength(0);
+
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=CodeChanged;isOutput=true;]true");
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=DocumentationChanged;isOutput=true;]true");
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=TestsChanged;isOutput=true;]false");
+
+            expect(tr.stdout).not.toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]");
+
+            expect(tr.stderr).toBeFalsy();
+        });
+
+        test("should not set variables with no rules", () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, "22-multi-filter-empty.runner.js"));
+            tr.run();
+
+            expect(tr.succeeded).toBe(true);
+
+            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.warningIssues).toHaveLength(0);
+            expect(tr.errorIssues).toHaveLength(0);
+
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=CodeChanged;isOutput=true;]true");
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=TestsChanged;isOutput=true;]false");
+
+            expect(tr.stdout).not.toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]");
+            expect(tr.stdout).not.toContain("##vso[task.setvariable variable=DocumentationChanged;isOutput=true;]true");
+
             expect(tr.stderr).toBeFalsy();
         });
 
