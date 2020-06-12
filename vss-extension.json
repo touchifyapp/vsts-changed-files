@@ -20,13 +20,16 @@
     ],
     "screenshots": [
         {
-            "path": "screenshots/screen-add.png"
+            "path": "images/screen-add.png"
         },
         {
-            "path": "screenshots/screen-simple.png"
+            "path": "images/screen-simple.png"
         },
         {
-            "path": "screenshots/screen-advanced.png"
+            "path": "images/screen-advanced.png"
+        },
+        {
+            "path": "images/screen-muti.png"
         }
     ],
     "content": {

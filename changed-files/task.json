@@ -45,7 +45,7 @@
             "label": "Is output",
             "defaultValue": true,
             "required": true,
-            "helpMarkDown": "Is output variable available in next stages?"
+            "helpMarkDown": "Are variables available in next stages?"
         },
         {
             "name": "cwd",
