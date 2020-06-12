@@ -2,8 +2,9 @@
 *.js
 *.map
 *.d.ts
-!*.config.js
 .taskkey
+!*.config.js
+!scripts/*.js
 
 # Dependencies
 node_modules/

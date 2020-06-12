@@ -19,7 +19,10 @@
     "test": "npm run lint && npm run build && jest",
     "jest": "jest",
     "lint": "eslint --ext ts changed-files/**/*.ts",
-    "pack": "npm run build && tfx extension create --manifest-globs vss-extension.json"
+    "pack": "npm run build && tfx extension create --manifest-globs vss-extension.json",
+    "preversion": "npm test",
+    "version": "node scripts/version.js && git add .",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "azure-devops-node-api": "^10.1.1",
