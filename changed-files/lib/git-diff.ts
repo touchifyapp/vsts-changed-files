@@ -26,3 +26,11 @@ export async function gitDiff(from: string, to: string, { cwd, verbose }: { cwd?
         return true;
     });
 }
+
+export async function gitVerify(commitId: string, { cwd, verbose }: { cwd?: string; verbose?: boolean } = {}): Promise<boolean> {
+    if (verbose) {
+        console.log(`> Executing git verify-commit on ${commitId}`);
+    }
+
+    return 0 === await tl.exec("git", ["verify-commit", commitId], { cwd, ignoreReturnCode: true });
+}

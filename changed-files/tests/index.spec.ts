@@ -11,7 +11,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
@@ -53,7 +53,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
@@ -63,6 +63,20 @@ describe("vsts-changed-files", () => {
 
         test("should return true if some glob match", () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "05-glob-match.runner.js"));
+            tr.run();
+
+            expect(tr.succeeded).toBe(true);
+
+            expect(tr.invokedToolCount).toBe(2);
+            expect(tr.warningIssues).toHaveLength(0);
+            expect(tr.errorIssues).toHaveLength(0);
+
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
+            expect(tr.stderr).toBeFalsy();
+        });
+
+        test("should return true if previous build sourceVersion is invalid", () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, "06-invalid-source-version.runner.js"));
             tr.run();
 
             expect(tr.succeeded).toBe(true);
@@ -85,7 +99,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
@@ -99,7 +113,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
@@ -117,7 +131,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
@@ -133,7 +147,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
@@ -152,7 +166,7 @@ describe("vsts-changed-files", () => {
 
             expect(tr.succeeded).toBe(true);
 
-            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.invokedToolCount).toBe(2);
             expect(tr.warningIssues).toHaveLength(0);
             expect(tr.errorIssues).toHaveLength(0);
 
