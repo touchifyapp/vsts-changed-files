@@ -16,7 +16,7 @@ setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
 setVariable("Build.SourceVersion", SOURCE_VERSION);
 
-tmr.setInput("rules", "src/**/*.ts");
+tmr.setInput("rules", "**");
 tmr.setInput("variable", "HasChanged");
 tmr.setInput("isOutput", "true");
 tmr.setInput("verbose", "true");
@@ -32,12 +32,11 @@ tmr.setAnswers({
         "/bin/git": true
     },
     exec: {
-        "/bin/git verify-commit latest_commit_id": { code: 0 },
-        "/bin/git diff --name-only HEAD latest_commit_id .": {
-            code: 0,
-            stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md"
+        "/bin/git verify-commit latest_commit_id": {
+            code: -1,
+            stdout: "error: commit 'latest_commit_id' not found"
         }
-    }
+    },
 });
 
 mockTfsApi();

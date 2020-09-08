@@ -2,7 +2,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 import type { IBuildApi } from "azure-devops-node-api/BuildApi";
 
-import { gitDiff } from "./lib/git-diff";
+import { gitDiff, gitVerify } from "./lib/git-diff";
 import { parseRules } from "./lib/parser";
 import { matchFiles } from "./lib/matcher";
 import { getLatestBuild, createClient } from "./lib/builds";
@@ -69,6 +69,11 @@ async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verb
     if (getVariable("Build.SourceVersion") === latestBuild.sourceVersion) {
         logVerbose(">> No new commit since last build: consider that no file changed!", { verbose });
         return [];
+    }
+
+    if (!await gitVerify(latestBuild.sourceVersion)) {
+        logVerbose(">> Previous build source invalid: consider that all files changed!", { verbose });
+        return;
     }
 
     const files = await gitDiff("HEAD", latestBuild.sourceVersion, { cwd, verbose });

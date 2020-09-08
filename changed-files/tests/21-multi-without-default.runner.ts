@@ -40,6 +40,7 @@ tmr.setAnswers({
         "/bin/git": true
     },
     exec: {
+        "/bin/git verify-commit latest_commit_id": { code: 0 },
         "/bin/git diff --name-only HEAD latest_commit_id .": {
             code: 0,
             stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md"
