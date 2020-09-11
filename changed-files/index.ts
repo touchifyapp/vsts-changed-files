@@ -71,7 +71,7 @@ async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verb
         return [];
     }
 
-    if (!await gitVerify(latestBuild.sourceVersion)) {
+    if (!await gitVerify(latestBuild.sourceVersion, { cwd, verbose })) {
         logVerbose(">> Previous build source invalid: consider that all files changed!", { verbose });
         return;
     }
