@@ -32,9 +32,9 @@ tmr.setAnswers({
         "/bin/git": true
     },
     exec: {
-        "/bin/git verify-commit latest_commit_id": {
+        "/bin/git cat-file -t latest_commit_id": {
             code: -1,
-            stdout: "error: commit 'latest_commit_id' not found"
+            stdout: "fatal: Not a valid object name latest_commit_id"
         }
     },
 });

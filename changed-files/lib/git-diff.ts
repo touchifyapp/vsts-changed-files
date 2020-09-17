@@ -29,8 +29,8 @@ export async function gitDiff(from: string, to: string, { cwd, verbose }: { cwd?
 
 export async function gitVerify(commitId: string, { cwd, verbose }: { cwd?: string; verbose?: boolean } = {}): Promise<boolean> {
     if (verbose) {
-        console.log(`> Executing git verify-commit on ${commitId}`);
+        console.log(`> Executing git cat-file with ${commitId}`);
     }
 
-    return 0 === await tl.exec("git", ["verify-commit", commitId], { cwd, ignoreReturnCode: true });
+    return 0 === await tl.exec("git", ["cat-file", "-t", commitId], { cwd, ignoreReturnCode: true });
 }
