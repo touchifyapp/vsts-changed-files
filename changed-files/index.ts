@@ -48,7 +48,8 @@ function createContext(): Context {
 
 async function initializeClient(): Promise<IBuildApi> {
     const orgUri = getVariable("System.TeamFoundationCollectionUri");
-    const accessToken = getVariable("System.AccessToken");
+    // Allow a missing AccessToken to default to an empty string to allow public API access
+    const accessToken = getVariable("System.AccessToken", "");
 
     return createClient(orgUri, accessToken);
 }

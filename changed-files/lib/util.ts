@@ -1,10 +1,13 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import * as tcm from "azure-pipelines-task-lib/taskcommand";
 
-export function getVariable(name: string): string {
+export function getVariable(name: string, default_: string | null = null): string {
     const val = tl.getVariable(name);
     if (!val) {
-        throw new Error(`Environement Error: This task requires "${name}" variable.`);
+        if (default_ != null) {
+            return default_
+        }
+        throw new Error(`Environment Error: This task requires "${name}" variable.`);
     }
 
     return val;
