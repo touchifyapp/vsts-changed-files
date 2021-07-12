@@ -19,6 +19,11 @@
       "name": "advanced",
       "displayName": "Advanced",
       "isExpanded": false
+    },
+    {
+      "name": "branches",
+      "displayName": "Multi branches",
+      "isExpanded": true
     }
   ],
   "inputs": [
@@ -65,7 +70,7 @@
     {
       "name": "filterOnBranchName",
       "type": "boolean",
-      "groupName": "advanced",
+      "groupName": "branches",
       "label": "Filter on branch name",
       "defaultValue": false,
       "helpMarkDown": "Enable filtering changes by branch name"
@@ -73,9 +78,9 @@
     {
       "name": "refBranchName",
       "type": "string",
-      "groupName": "advanced",
+      "groupName": "branches",
       "label": "Name of reference branch name to compare with",
-      "defaultValue": false,
+      "defaultValue": "master",
       "helpMarkDown": "Enable filtering changes based on the reference branch name"
     }
   ],
