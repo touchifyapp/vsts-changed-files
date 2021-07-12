@@ -76,6 +76,8 @@ jobs:
 * __variable__: The name of the default output variable to set to be available in next steps/jobs/stages. _Default:_ `HasChanged`.
 * __isOutput__: Are variables available in next stages?  _Default:_ `true`.
 * __cwd__: Change the current working directory. _Default:_ `$(System.DefaultWorkingDirectory)`
+* __filterOnBranchName__: If set to `true` the comparaisation will be againse the previous successeful build of the same branch._Default:_ `false`.
+* __refBranchName__: If set the comparaisation will be againse the previous successeful build of `refBranchName`. The `filterOnBranchName` should be set to `true`
 * __verbose__: Enable verbose logging. _Default:_ `false`.
 
 ## License

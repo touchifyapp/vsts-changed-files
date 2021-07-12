@@ -33,6 +33,8 @@ function createContext(): Context {
     const isOutput = tl.getBoolInput("isOutput");
     const cwd = tl.getInput("cwd") || tl.cwd();
     const verbose = tl.getBoolInput("verbose");
+    const filterOnBranchName = tl.getBoolInput("filterOnBranchName") || false;
+    const refBranchName = tl.getInput("refBranchName") || tl.getVariable("Build.SourceBranchName") || "";
 
     return {
         project,
@@ -41,7 +43,9 @@ function createContext(): Context {
             rules,
             isOutput,
             cwd,
-            verbose
+            verbose,
+            filterOnBranchName,
+            refBranchName
         }
     };
 }
@@ -53,11 +57,11 @@ async function initializeClient(): Promise<IBuildApi> {
     return createClient(orgUri, accessToken);
 }
 
-async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verbose } }: Context): Promise<string[] | undefined> {
+async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verbose, filterOnBranchName, refBranchName } }: Context): Promise<string[] | undefined> {
     logVerbose("> Fetching latest succeeded build", { verbose });
 
     const definitionId = parseInt(getVariable("System.DefinitionId"));
-    const latestBuild = await getLatestBuild(client, project, definitionId);
+    const latestBuild = await getLatestBuild(client, project, definitionId, filterOnBranchName, refBranchName);
 
     if (!latestBuild || !latestBuild.sourceVersion) {
         logVerbose(">> No previous build found: consider that all files changed!", { verbose });
@@ -125,5 +129,7 @@ interface Context {
         isOutput: boolean;
         cwd: string;
         verbose: boolean;
+        filterOnBranchName: boolean;
+        refBranchName: string;
     };
 }

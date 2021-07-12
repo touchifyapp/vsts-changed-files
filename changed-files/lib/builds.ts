@@ -10,7 +10,12 @@ export async function createClient(orgUri: string, accessToken: string): Promise
     return connection.getBuildApi();
 }
 
-export async function getLatestBuild(client: IBuildApi, project: string, definitionId: number): Promise<Build | undefined> {
+export async function getLatestBuild(client: IBuildApi, project: string, definitionId: number, filterOnBranchName: boolean, branchName: string): Promise<Build | undefined> {
+    let branchNameFilter = undefined;
+    if (filterOnBranchName) {
+        branchNameFilter = branchName
+    }
+
     const [latestBuild] = await client.getBuilds(
         project,
         [definitionId],
@@ -28,7 +33,8 @@ export async function getLatestBuild(client: IBuildApi, project: string, definit
         undefined,
         undefined,
         undefined,
-        BuildQueryOrder.FinishTimeDescending
+        BuildQueryOrder.FinishTimeDescending,
+        branchNameFilter
     );
 
     return latestBuild;
