@@ -61,6 +61,22 @@
       "label": "Verbose logging",
       "defaultValue": false,
       "helpMarkDown": "Enable verbose logging."
+    },
+    {
+      "name": "filterOnBranchName",
+      "type": "boolean",
+      "groupName": "advanced",
+      "label": "Filter on branch name",
+      "defaultValue": false,
+      "helpMarkDown": "Enable filtering changes by branch name"
+    },
+    {
+      "name": "refBranchName",
+      "type": "string",
+      "groupName": "advanced",
+      "label": "Name of reference branch name to compare with",
+      "defaultValue": false,
+      "helpMarkDown": "Enable filtering changes based on the reference branch name"
     }
   ],
   "execution": {
