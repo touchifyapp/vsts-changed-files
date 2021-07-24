@@ -15,6 +15,8 @@ setVariable("System.TeamFoundationCollectionUri", "https://dev.azure.com/orga");
 setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
 setVariable("Build.SourceVersion", SOURCE_VERSION);
+setVariable("Build.BuildId", DEFINITION_ID);
+setVariable("Build.SourceBranch", "master");
 
 tmr.setInput("rules", "src/**/*.ts");
 tmr.setInput("variable", "HasChanged");
@@ -32,8 +34,7 @@ tmr.setAnswers({
         "/bin/git": true
     },
     exec: {
-        "/bin/git cat-file -t latest_commit_id": { code: 0 },
-        "/bin/git diff --name-only HEAD latest_commit_id .": {
+        "/bin/git log -m -1 --name-only --pretty=format: latest_commit_id": {
             code: 0,
             stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md"
         }

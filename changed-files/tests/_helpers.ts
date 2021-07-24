@@ -10,35 +10,48 @@ export function getVariableKey(name: string): string {
     return name.replace(/\./g, '_').toUpperCase();
 }
 
-export function mockTfsApi({ query, build }: { query?: Record<string, string>, build?: Partial<Build> | null } = {}): nock.Scope {
+export function mockTfsApi({ query }: { query?: Record<string, string>, build?: Partial<Build> | null } = {}): nock.Scope {
 
     return nock("https://dev.azure.com")
+    
+    // Build route template
+    .options("/orga/_apis/build")
+    .reply(200, JSON.stringify({
+        value: [
+            {
+                id: "54572c7b-bbd3-45d4-80dc-28be08941620",
+                releasedVersion: "6.1-preview.2",
+                maxVersion: "6.1-preview.2",
+                area: "build",
+                resourceName: "builds",
+                routeTemplate: "/{project}/_apis/{area}/{resource}/{buildId}/changes"
+            }
+        ]
+        }))
 
-        // Build route template
-        .options("/orga/_apis/build")
+        // Get build changes
+        .get("/orga/project/_apis/build/builds/500/changes")
+        .query(query || true)
         .reply(200, JSON.stringify({
-            value: [
+            "count": 1,
+            "value": [
                 {
-                    id: "0cd358e1-9217-4d94-8269-1c1ee6f93dcf",
-                    releasedVersion: "5.1",
-                    maxVersion: "5.1",
-                    area: "build",
-                    resourceName: "builds",
-                    routeTemplate: "/{project}/_apis/{area}/{resource}"
+                    "id": "latest_commit_id",
+                    "message": "test commit",
+                    "type": "TfsGit",
+                    "author": {
+                        "displayName": "User name",
+                    },
+                    "timestamp": "2021-07-13T17:45:46Z"
                 }
             ]
         }))
 
-        // Latest succeeded build
-        .get("/orga/project/_apis/build/builds")
+        .get("/orga/project/_apis/build/builds/100/changes")
         .query(query || true)
         .reply(200, JSON.stringify({
-            value: build === null ? [] : [
-                build || {
-                    buildNumber: "20200101.1",
-                    sourceVersion: "latest_commit_id"
-                }
-            ]
+            "count": 0,
+            "value": []
         }))
 
         // Location route template
@@ -54,7 +67,6 @@ export function mockTfsApi({ query, build }: { query?: Record<string, string>, b
                 }
             ]
         }))
-
         // Same resource area
         .get("/orga/_apis/Location")
         .reply(200, JSON.stringify({

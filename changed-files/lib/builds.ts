@@ -10,6 +10,15 @@ export async function createClient(orgUri: string, accessToken: string): Promise
     return connection.getBuildApi();
 }
 
+export async function getBuildChanges(client: IBuildApi, project: string, buildId: number, { verbose }: { verbose?: boolean } = {}): Promise<string[]> {
+    if (verbose) {
+        console.log(`get the list of changes for the build ${buildId}`)
+    }
+    return (await client.getBuildChanges(project, buildId))
+        .map(c => c.id || "")
+        .filter(id => id != "")
+}
+
 export async function getLatestBuild(client: IBuildApi, project: string, definitionId: number): Promise<Build | undefined> {
     const [latestBuild] = await client.getBuilds(
         project,

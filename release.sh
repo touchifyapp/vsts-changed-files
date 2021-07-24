@@ -1,0 +1,1 @@
+version=14 && sed -i 's|"version": "1.1.\([^"]*\)"|"version": "1.1.'${version}'"|g' package.json && npm run version && npm run pack && tfx extension publish --manifest-globs vss-extension.json --vsix MohamedElhabib.vsts-changed-files-multibranch-1.1.${version}.vsix --token pzemqenvecp32kb5dzehc35dddnr5a3geb23hqyhom7fgvxrjeza

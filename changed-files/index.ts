@@ -2,10 +2,10 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 import type { IBuildApi } from "azure-devops-node-api/BuildApi";
 
-import { gitDiff, gitVerify } from "./lib/git-diff";
+import { getCommitsChangedFiles, listChangedFilesBetweenBranches } from "./lib/git-diff";
 import { parseRules } from "./lib/parser";
 import { matchFiles } from "./lib/matcher";
-import { getLatestBuild, createClient } from "./lib/builds";
+import { getBuildChanges, createClient } from "./lib/builds";
 import { getVariable, setVariable, fromEntries, logVerbose } from "./lib/util";
 
 run();
@@ -33,6 +33,7 @@ function createContext(): Context {
     const isOutput = tl.getBoolInput("isOutput");
     const cwd = tl.getInput("cwd") || tl.cwd();
     const verbose = tl.getBoolInput("verbose");
+    const refBranch = tl.getInput("refBranch", false);
 
     return {
         project,
@@ -40,6 +41,7 @@ function createContext(): Context {
             variable,
             rules,
             isOutput,
+            refBranch,
             cwd,
             verbose
         }
@@ -53,39 +55,34 @@ async function initializeClient(): Promise<IBuildApi> {
     return createClient(orgUri, accessToken);
 }
 
-async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verbose } }: Context): Promise<string[] | undefined> {
-    logVerbose("> Fetching latest succeeded build", { verbose });
+async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verbose, refBranch } }: Context): Promise<string[] | undefined> {
 
-    const definitionId = parseInt(getVariable("System.DefinitionId"));
-    const latestBuild = await getLatestBuild(client, project, definitionId);
+    const buildId = parseInt(getVariable("Build.BuildId"));
+    const commitIds: string[] = await getBuildChanges(client, project, buildId, { verbose });
+    const currentBranch: string = tl.getVariable("Build.SourceBranch")?.replace("refs/heads/", "origin/") || ""
 
-    if (!latestBuild || !latestBuild.sourceVersion) {
-        logVerbose(">> No previous build found: consider that all files changed!", { verbose });
-        return;
+    if (verbose) {
+        console.log(`Build id is ${buildId}`)
+        console.log(`refBranch = ${refBranch}`)
+        console.log(`currentBranch = ${currentBranch}`)
     }
 
-    logVerbose(`> Last succeeded build found: ${latestBuild.buildNumber}`, { verbose });
-
-    if (getVariable("Build.SourceVersion") === latestBuild.sourceVersion) {
-        logVerbose(">> No new commit since last build: consider that no file changed!", { verbose });
-        return [];
+    let files: string[]
+    if (refBranch !== undefined && refBranch !== currentBranch) {
+        if (verbose) {
+            console.log(`compare ${currentBranch} with the ref branch ${refBranch}...`)
+        }
+        files = listChangedFilesBetweenBranches(refBranch)
+    } else {
+        if (verbose) {
+            console.log(`extracting changes from the list of commits...`)
+        }
+        files = getCommitsChangedFiles(commitIds, { cwd, verbose });
     }
 
-    if (!await gitVerify(latestBuild.sourceVersion, { cwd, verbose })) {
-        logVerbose(">> Previous build source invalid: consider that all files changed!", { verbose });
-        return;
+    if (verbose) {
+        console.log(`Changed files are : ${files}`)
     }
-
-    const files = await gitDiff("HEAD", latestBuild.sourceVersion, { cwd, verbose });
-
-    if (files.length > 0) {
-        logVerbose(">> Changes since last succeeded build:", { verbose });
-        for (const file of files) logVerbose("\t - " + file, { verbose });
-    }
-    else {
-        logVerbose(">> No change found since last succeeded build!", { verbose });
-    }
-
     return files;
 }
 
@@ -123,6 +120,7 @@ interface Context {
         variable: string;
         rules: string;
         isOutput: boolean;
+        refBranch: string | undefined;
         cwd: string;
         verbose: boolean;
     };
