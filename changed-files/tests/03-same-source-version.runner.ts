@@ -6,7 +6,7 @@ import { setVariable, mockTfsApi } from "./_helpers";
 const TEAM_PROJECT_ID = "project";
 const SOURCE_VERSION = "source_commit_id";
 const ACCESS_TOKEN = "access_token";
-const DEFINITION_ID = "500";
+const DEFINITION_ID = "100";
 
 const tmr = new tmrm.TaskMockRunner(path.join(__dirname, "..", "index.js"));
 
@@ -15,6 +15,9 @@ setVariable("System.TeamFoundationCollectionUri", "https://dev.azure.com/orga");
 setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
 setVariable("Build.SourceVersion", SOURCE_VERSION);
+setVariable("Build.BuildId", DEFINITION_ID);
+setVariable("Build.SourceBranch","master");
+
 
 tmr.setInput("rules", "**");
 tmr.setInput("variable", "HasChanged");
