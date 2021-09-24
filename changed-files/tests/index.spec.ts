@@ -72,6 +72,20 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
             expect(tr.stderr).toBeFalsy();
         });
+
+        test("should allow empty access token for public repos", () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, "06-no-access-token.runner.js"));
+            tr.run();
+
+            expect(tr.succeeded).toBe(true);
+
+            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.warningIssues).toHaveLength(0);
+            expect(tr.errorIssues).toHaveLength(0);
+
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
+            expect(tr.stderr).toBeFalsy();
+        });
     });
 
     describe("inputs", () => {
