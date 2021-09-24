@@ -51,8 +51,7 @@
       "name": "refBranch",
       "type": "string",
       "label": "Reference branch",
-      "required": true,
-      "helpMarkDown": "The branch that will be used as reference to compare in case of multi branches pipeline"
+      "helpMarkDown": "The branch that will be used as reference to compare in case of multi-branches pipeline"
     },
     {
       "name": "cwd",

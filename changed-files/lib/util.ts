@@ -16,11 +16,10 @@ export function setVariable(variable: string, value: string | number | boolean, 
     // console.log(`##vso[task.setvariable variable=${name};${isOutput ? "isOutput=true" : ""}]${value}`);
 }
 
-export function logVerbose(message: string, { verbose }: { verbose: boolean }): void {
+export function logVerbose(message: string, { verbose }: { verbose?: boolean }): void {
     if (verbose) {
         console.log(message);
-    }
-    else {
+    } else {
         logDebug("CF:::" + message);
     }
 }

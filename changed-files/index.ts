@@ -2,7 +2,7 @@ import * as tl from "azure-pipelines-task-lib/task";
 
 import type { IBuildApi } from "azure-devops-node-api/BuildApi";
 
-import { getCommitsChangedFiles, listChangedFilesBetweenBranches } from "./lib/git-diff";
+import { listChangedFilesFromCommits, listChangedFilesBetweenBranches } from "./lib/git-diff";
 import { parseRules } from "./lib/parser";
 import { matchFiles } from "./lib/matcher";
 import { getBuildChanges, createClient } from "./lib/builds";
@@ -19,9 +19,8 @@ async function run(): Promise<void> {
         const changes = getChangesPerVariable(files, context);
 
         setVariables(changes, context);
-    }
-    catch (err) {
-        tl.setResult(tl.TaskResult.Failed, err.message);
+    } catch (err) {
+        tl.setResult(tl.TaskResult.Failed, (err as Error).message);
     }
 }
 
@@ -43,8 +42,8 @@ function createContext(): Context {
             isOutput,
             refBranch,
             cwd,
-            verbose
-        }
+            verbose,
+        },
     };
 }
 
@@ -55,59 +54,66 @@ async function initializeClient(): Promise<IBuildApi> {
     return createClient(orgUri, accessToken);
 }
 
-async function getChangedFiles(client: IBuildApi, { project, inputs: { cwd, verbose, refBranch } }: Context): Promise<string[] | undefined> {
-
+async function getChangedFiles(
+    client: IBuildApi,
+    { project, inputs: { cwd, verbose, refBranch } }: Context
+): Promise<string[]> {
     const buildId = parseInt(getVariable("Build.BuildId"));
-    const commitIds: string[] = await getBuildChanges(client, project, buildId, { verbose });
-    const currentBranch: string = tl.getVariable("Build.SourceBranch")?.replace("refs/heads/", "origin/") || ""
+    const currentBranch = getVariable("Build.SourceBranch").replace("refs/heads/", "");
 
-    if (verbose) {
-        console.log(`Build id is ${buildId}`)
-        console.log(`refBranch = ${refBranch}`)
-        console.log(`currentBranch = ${currentBranch}`)
-    }
+    logVerbose(`Build ID: ${buildId}`, { verbose });
+    logVerbose(`Reference Branch: ${refBranch}`, { verbose });
+    logVerbose(`Current Branch: ${currentBranch}`, { verbose });
 
-    let files: string[]
+    let files: string[];
     if (refBranch !== undefined && refBranch !== currentBranch) {
-        if (verbose) {
-            console.log(`compare ${currentBranch} with the ref branch ${refBranch}...`)
-        }
-        files = listChangedFilesBetweenBranches(refBranch)
+        logVerbose(`> Comparing '${currentBranch}' with the reference branch '${refBranch}'...`, { verbose });
+        files = listChangedFilesBetweenBranches(refBranch, { cwd, verbose });
     } else {
-        if (verbose) {
-            console.log(`extracting changes from the list of commits...`)
-        }
-        files = getCommitsChangedFiles(commitIds, { cwd, verbose });
+        logVerbose(`> Extracting changes from the list of commits...`, { verbose });
+
+        const commitIds = await getBuildChanges(client, { project, buildId, verbose });
+        files = listChangedFilesFromCommits(commitIds, { cwd, verbose });
     }
 
-    if (verbose) {
-        console.log(`Changed files are : ${files}`)
+    if (files.length > 0) {
+        logVerbose(">> Changed files:", { verbose });
+        for (const file of files) logVerbose("\t - " + file, { verbose });
+    } else {
+        logVerbose(">> No change found since last succeeded build!", { verbose });
     }
+
     return files;
 }
 
-function getChangesPerVariable(files: string[] | undefined, { inputs: { rules, variable, verbose } }: Context): Record<string, boolean> {
+function getChangesPerVariable(
+    files: string[],
+    { inputs: { rules, variable, verbose } }: Context
+): Record<string, boolean> {
     const groupedRules = parseRules(rules, variable);
-    const categories = Object.keys(groupedRules).filter(cat => groupedRules[cat].length > 0);
+    const categories = Object.keys(groupedRules).filter((cat) => groupedRules[cat].length > 0);
 
     if (!files) {
-        return fromEntries(categories.map(c => [c, true]));
+        return fromEntries(categories.map((c) => [c, true]));
     }
 
     if (!files.length) {
-        return fromEntries(categories.map(c => [c, false]));
+        return fromEntries(categories.map((c) => [c, false]));
     }
 
     logVerbose("> Filtering files using glob rules", { verbose });
 
-    return fromEntries(
-        categories.map(cat => [cat, matchFiles(files, groupedRules[cat])])
-    );
+    return fromEntries(categories.map((cat) => [cat, matchFiles(files, groupedRules[cat])]));
 }
 
 function setVariables(changes: Record<string, boolean>, { inputs: { isOutput, verbose } }: Context): void {
     for (const [variable, hasChanged] of Object.entries(changes)) {
-        logVerbose(`>> ${variable.toUpperCase()}: ${hasChanged ? "Changes" : "No change"} detected since last succeeded build, setting "${variable}" to "${hasChanged}"`, { verbose });
+        logVerbose(
+            `>> ${variable.toUpperCase()}: ${
+                hasChanged ? "Changes" : "No change"
+            } detected since last succeeded build, setting "${variable}" to "${hasChanged}"`,
+            { verbose }
+        );
 
         setVariable(variable, String(hasChanged), isOutput);
     }

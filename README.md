@@ -82,7 +82,7 @@ jobs:
       - task: ChangedFiles@1
         name: CheckChanges
         inputs:
-          refBranch: "origin/master"
+          refBranch: master
           rules: |
             [CodeChanged]
             src/**/*.ts
@@ -112,7 +112,7 @@ jobs:
 * __rules__: Filter files to check changes for.  _Default:_ `**` _(match all files)_.
 * __variable__: The name of the default output variable to set to be available in next steps/jobs/stages. _Default:_ `HasChanged`.
 * __isOutput__: Are variables available in next stages?  _Default:_ `true`.
-* __refBranch__: The branch that will be used as reference to check changes in case multi branches pipeline.
+* __refBranch__: The branch that will be used as reference to check changes in case multi-branches pipeline.
 * __cwd__: Change the current working directory. _Default:_ `$(System.DefaultWorkingDirectory)`
 * __verbose__: Enable verbose logging. _Default:_ `false`.
 
