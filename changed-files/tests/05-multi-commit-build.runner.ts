@@ -6,7 +6,7 @@ import { setVariable, mockTfsApi } from "./_helpers";
 const TEAM_PROJECT_ID = "project";
 const SOURCE_VERSION = "source_commit_id";
 const ACCESS_TOKEN = "access_token";
-const DEFINITION_ID = "500";
+const DEFINITION_ID = "200";
 
 const tmr = new tmrm.TaskMockRunner(path.join(__dirname, "..", "index.js"));
 
@@ -37,6 +37,10 @@ tmr.setAnswers({
         "/bin/git log -m -1 --name-only --pretty=format: latest_commit_id": {
             code: 0,
             stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md",
+        },
+        "/bin/git log -m -1 --name-only --pretty=format: previous_commit_id": {
+            code: 0,
+            stdout: "src/file3.ts\nsrc/file4.ts",
         },
     },
 });

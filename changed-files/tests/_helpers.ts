@@ -7,71 +7,116 @@ export function setVariable(name: string, value: string): void {
 }
 
 export function getVariableKey(name: string): string {
-    return name.replace(/\./g, '_').toUpperCase();
+    return name.replace(/\./g, "_").toUpperCase();
 }
 
-export function mockTfsApi({ query }: { query?: Record<string, string>, build?: Partial<Build> | null } = {}): nock.Scope {
+export type MockTfsApiOptions = { query?: Record<string, string>; build?: Partial<Build> | null };
 
-    return nock("https://dev.azure.com")
-    
-    // Build route template
-    .options("/orga/_apis/build")
-    .reply(200, JSON.stringify({
-        value: [
-            {
-                id: "54572c7b-bbd3-45d4-80dc-28be08941620",
-                releasedVersion: "6.1-preview.2",
-                maxVersion: "6.1-preview.2",
-                area: "build",
-                resourceName: "builds",
-                routeTemplate: "/{project}/_apis/{area}/{resource}/{buildId}/changes"
-            }
-        ]
-        }))
+export function mockTfsApi({ query }: MockTfsApiOptions = {}): nock.Scope {
+    return (
+        nock("https://dev.azure.com")
+            // Get build changes
+            .get("/orga/project/_apis/build/builds/500/changes")
+            .query(query || true)
+            .reply(
+                200,
+                JSON.stringify({
+                    count: 1,
+                    value: [
+                        {
+                            id: "latest_commit_id",
+                            message: "test commit",
+                            type: "TfsGit",
+                            author: {
+                                displayName: "User name",
+                            },
+                            timestamp: "2021-07-13T17:45:46Z",
+                        },
+                    ],
+                })
+            )
+            .get("/orga/project/_apis/build/builds/100/changes")
+            .query(query || true)
+            .reply(
+                200,
+                JSON.stringify({
+                    count: 0,
+                    value: [],
+                })
+            )
+            .get("/orga/project/_apis/build/builds/200/changes")
+            .query(query || true)
+            .reply(
+                200,
+                JSON.stringify({
+                    count: 0,
+                    value: [
+                        {
+                            id: "latest_commit_id",
+                            message: "test commit",
+                            type: "TfsGit",
+                            author: {
+                                displayName: "User name",
+                            },
+                            timestamp: "2021-07-13T17:45:46Z",
+                        },
+                        {
+                            id: "previous_commit_id",
+                            message: "previous commit",
+                            type: "TfsGit",
+                            author: {
+                                displayName: "User name",
+                            },
+                            timestamp: "2021-07-13T10:45:46Z",
+                        },
+                    ],
+                })
+            )
 
-        // Get build changes
-        .get("/orga/project/_apis/build/builds/500/changes")
-        .query(query || true)
-        .reply(200, JSON.stringify({
-            "count": 1,
-            "value": [
-                {
-                    "id": "latest_commit_id",
-                    "message": "test commit",
-                    "type": "TfsGit",
-                    "author": {
-                        "displayName": "User name",
-                    },
-                    "timestamp": "2021-07-13T17:45:46Z"
-                }
-            ]
-        }))
+            // Build route template
+            .options("/orga/_apis/build")
+            .reply(
+                200,
+                JSON.stringify({
+                    value: [
+                        {
+                            id: "54572c7b-bbd3-45d4-80dc-28be08941620",
+                            releasedVersion: "6.1-preview.2",
+                            maxVersion: "6.1-preview.2",
+                            area: "build",
+                            resourceName: "builds",
+                            routeTemplate: "/{project}/_apis/{area}/{resource}/{buildId}/changes",
+                        },
+                    ],
+                })
+            )
 
-        .get("/orga/project/_apis/build/builds/100/changes")
-        .query(query || true)
-        .reply(200, JSON.stringify({
-            "count": 0,
-            "value": []
-        }))
+            // Location route template
+            .options("/orga/_apis/Location")
+            .reply(
+                200,
+                JSON.stringify({
+                    value: [
+                        {
+                            id: "e81700f7-3be2-46de-8624-2eb35882fcaa",
+                            releasedVersion: "5.1",
+                            maxVersion: "5.1",
+                            area: "Location",
+                            routeTemplate: "/_apis/{area}",
+                        },
+                    ],
+                })
+            )
 
-        // Location route template
-        .options("/orga/_apis/Location")
-        .reply(200, JSON.stringify({
-            value: [
-                {
-                    id: "e81700f7-3be2-46de-8624-2eb35882fcaa",
-                    releasedVersion: "5.1",
-                    maxVersion: "5.1",
-                    area: "Location",
-                    routeTemplate: "/_apis/{area}"
-                }
-            ]
-        }))
-        // Same resource area
-        .get("/orga/_apis/Location")
-        .reply(200, JSON.stringify({
-            value: []
-        }));
+            // Same resource area
+            .get("/orga/_apis/Location")
+            .reply(
+                200,
+                JSON.stringify({
+                    value: [],
+                })
+            )
+    );
 }
 
 export function restoreTfsApi(): void {

@@ -14,11 +14,11 @@ setVariable("System.TeamProjectId", TEAM_PROJECT_ID);
 setVariable("System.TeamFoundationCollectionUri", "https://dev.azure.com/orga");
 setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
-setVariable("Build.BuildId", DEFINITION_ID);
 setVariable("Build.SourceVersion", SOURCE_VERSION);
+setVariable("Build.BuildId", DEFINITION_ID);
 setVariable("Build.SourceBranch", "master");
 
-tmr.setInput("rules", "**");
+tmr.setInput("rules", "src/**/*.ts");
 tmr.setInput("variable", "HasChanged");
 tmr.setInput("isOutput", "true");
 tmr.setInput("verbose", "true");

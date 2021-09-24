@@ -14,42 +14,34 @@ setVariable("System.TeamProjectId", TEAM_PROJECT_ID);
 setVariable("System.TeamFoundationCollectionUri", "https://dev.azure.com/orga");
 setVariable("System.AccessToken", ACCESS_TOKEN);
 setVariable("System.DefinitionId", DEFINITION_ID);
-setVariable("Build.SourceVersion", SOURCE_VERSION);
 setVariable("Build.BuildId", DEFINITION_ID);
-setVariable("Build.SourceBranch","master");
+setVariable("Build.SourceVersion", SOURCE_VERSION);
+setVariable("Build.SourceBranch", "dev");
 
-tmr.setInput("rules", `
-[CodeChanged]
-src/**/*.ts
-
-[DocumentationChanged]
-docs/**/*.md
-
-[TestsChanged]
-tests/**/*.ts`);
+tmr.setInput("rules", "**");
+tmr.setInput("refBranch", "master");
 tmr.setInput("variable", "HasChanged");
 tmr.setInput("isOutput", "true");
 tmr.setInput("verbose", "true");
 
 tmr.setAnswers({
     which: {
-        "git": "/bin/git"
+        git: "/bin/git",
     },
     exist: {
-        "/bin/git": true
+        "/bin/git": true,
     },
     checkPath: {
-        "/bin/git": true
+        "/bin/git": true,
     },
     exec: {
-        "/bin/git log -m -1 --name-only --pretty=format: latest_commit_id": {
+        "/bin/git diff --name-only origin/master...": {
             code: 0,
-            stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md"
-        }
-    }
+            stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md",
+        },
+    },
 });
 
 mockTfsApi();
 
 tmr.run();
-

@@ -25,24 +25,22 @@ tmr.setInput("verbose", "true");
 
 tmr.setAnswers({
     which: {
-        "git": "/bin/git"
+        git: "/bin/git",
     },
     exist: {
-        "/bin/git": true
+        "/bin/git": true,
     },
     checkPath: {
-        "/bin/git": true
+        "/bin/git": true,
     },
     exec: {
         "/bin/git log -m -1 --name-only --pretty=format: latest_commit_id": {
             code: 0,
-            stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md"
-        }
-    }
-
+            stdout: "src/file1.ts\nsrc/file2.ts\ndocs/index.md",
+        },
+    },
 });
 
 mockTfsApi();
 
 tmr.run();
-
