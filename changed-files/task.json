@@ -50,6 +50,7 @@
     {
       "name": "refBranch",
       "type": "string",
+      "groupName": "advanced",
       "label": "Reference branch",
       "helpMarkDown": "The branch that will be used as reference to compare in case of multi-branches pipeline"
     },
