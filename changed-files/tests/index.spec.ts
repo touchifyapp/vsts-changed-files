@@ -100,6 +100,20 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
             expect(tr.stderr).toBeFalsy();
         });
+
+        test.only("should include files with unicode characters in the match", () => {
+            const tr = new ttm.MockTestRunner(path.join(__dirname, "08-include-unicode-names.runner.js"));
+            tr.run();
+
+            expect(tr.succeeded).toBe(true);
+
+            expect(tr.invokedToolCount).toBe(1);
+            expect(tr.warningIssues).toHaveLength(0);
+            expect(tr.errorIssues).toHaveLength(0);
+
+            expect(tr.stdout).toContain("##vso[task.setvariable variable=HasChanged;isOutput=true;]true");
+            expect(tr.stderr).toBeFalsy();
+        });
     });
 
     describe("inputs", () => {

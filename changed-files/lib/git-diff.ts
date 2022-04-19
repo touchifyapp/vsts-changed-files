@@ -22,6 +22,6 @@ function listChangedFiles(gitDiffCmdArgs: string[], { cwd, verbose }: GitChanges
     return tl
         .execSync("git", gitDiffCmdArgs, { cwd })
         .stdout.split("\n")
-        .map((l) => l.trim())
+        .map((l) => l.trim().replace(/(^")|("$)/g, ""))
         .filter((l) => l !== "");
 }
