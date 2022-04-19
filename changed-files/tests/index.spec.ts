@@ -101,7 +101,7 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test.only("should include files with unicode characters in the match", () => {
+        test("should include files with unicode characters in the match", () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "08-include-unicode-names.runner.js"));
             tr.run();
 
