@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
   "id": "vsts-changed-files",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "name": "Changed files",
   "description": "Pipeline task to get changed files and run tasks according to those changes.",
   "publisher": "Touchify",
