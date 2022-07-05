@@ -106,7 +106,44 @@ jobs:
         - # Add your build steps here
 ```
 
+## Example with conditional stages
 
+```yaml
+stages:
+  - stage: pre
+    jobs:
+      - job: check
+        displayName: Check changed files
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: ChangedFiles@1
+            name: CheckChanges
+            inputs:
+              refBranch: main 
+              rules: |
+                [BarChanged]
+                bar/**
+
+                [FooChanged]
+                foo/**
+
+  - stage: bar_has_changed
+    dependsOn: ["pre"]
+    condition: eq(dependencies.pre.outputs['check.CheckChanges.BarChanged'], 'true')
+    jobs: 
+      - job: run
+        steps:
+           - # Add your build steps here
+
+  - stage: foo_has_changed
+    dependsOn: ["pre"]
+    condition: eq(dependencies.pre.outputs['check.CheckChanges.FooChanged'], 'true')
+    jobs: 
+      - job: run
+        steps:
+           - # Add your build steps here
+```
 ## Options
 
 * __rules__: Filter files to check changes for.  _Default:_ `**` _(match all files)_.
