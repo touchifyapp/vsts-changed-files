@@ -12,7 +12,7 @@ Installation can be done using [Visual Studio MarketPlace](https://marketplace.v
 
 Source code can be found on [Github](https://github.com/touchifyapp/vsts-changed-files).
 
-## Simple Usage
+## Simple usage
 
 ```yaml
 jobs: 
@@ -35,7 +35,7 @@ jobs:
         - # Add your build steps here
 ```
 
-## Multiple variable Usage
+## Multi-variable usage
 
 ```yaml
 jobs: 
@@ -70,7 +70,7 @@ jobs:
         - # Add your build steps here
 ```
 
-## Multiple branches Usage
+## Multi-branch usage
 
 ```yaml
 jobs: 
@@ -106,7 +106,7 @@ jobs:
         - # Add your build steps here
 ```
 
-## Example with conditional stages
+## Multi-stage usage
 
 ```yaml
 stages:
@@ -130,6 +130,7 @@ stages:
 
   - stage: bar_has_changed
     dependsOn: ["pre"]
+    displayName: This stage runs only when the `BarChanged` variable is true
     condition: eq(dependencies.pre.outputs['check.CheckChanges.BarChanged'], 'true')
     jobs: 
       - job: run
@@ -138,11 +139,22 @@ stages:
 
   - stage: foo_has_changed
     dependsOn: ["pre"]
+    displayName: This stage runs only when the `FooChanged` variable is true
     condition: eq(dependencies.pre.outputs['check.CheckChanges.FooChanged'], 'true')
     jobs: 
       - job: run
         steps:
            - # Add your build steps here
+           
+  - stage: stage_with_conditional_job
+    dependsOn: ["pre"]
+    displayName: The stage always runs but contains a job that runs only when `FooChanged` is true
+    jobs: 
+      - job: job_when_foo_has_changed
+        displayName: This job runs only when `FooChanged` is true
+        condition: eq(stageDependencies.pre.check.outputs['CheckChanges.FooChanged'], 'true')
+        steps:
+          - # Add your build steps here
 ```
 ## Options
 
