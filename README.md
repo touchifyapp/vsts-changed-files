@@ -165,6 +165,30 @@ stages:
 * __cwd__: Change the current working directory. _Default:_ `$(System.DefaultWorkingDirectory)`
 * __verbose__: Enable verbose logging. _Default:_ `false`.
 
+## Troubleshooting
+
+If you encounter the error:
+`fatal: ambiguous argument 'origin/{branch}...': unknown revision or path not in the working tree.`
+
+It means that you should fetch the full depth of your git history to be sure to include all necessaries artifacts:
+
+```yaml
+jobs: 
+  - job: check
+    displayName: Check changed files
+    pool:
+        vmImage: ubuntu-latest
+    steps:
+      - checkout: self
+        fetchDepth: "0"
+        
+      - task: ChangedFiles@1
+        name: CheckChanges
+        inputs:
+          rules: src/**/*.ts
+          variable: HasChanged
+```
+
 ## License
 
 [MIT](https://raw.githubusercontent.com/touchifyapp/vsts-changed-files/master/LICENSE)
