@@ -30,7 +30,7 @@
   "dependencies": {
     "azure-devops-node-api": "^11.0.1",
     "azure-pipelines-task-lib": "^3.1.9",
-    "minimatch": "^3.0.4"
+    "minimatch": "^3.0.5"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
