@@ -3,9 +3,9 @@ import * as ttm from "azure-pipelines-task-lib/mock-test";
 
 describe("vsts-changed-files-multibranch", () => {
     describe("core behaviors", () => {
-        test("should works", () => {
+        test("should works", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "01-base.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -17,9 +17,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should return false if previous build used same sourceVersion", () => {
+        test("should return false if previous build used same sourceVersion", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "02-same-source-version.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -31,9 +31,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should return false if no glob match", () => {
+        test("should return false if no glob match", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "03-no-glob-match.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -45,9 +45,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should return true if some glob match", () => {
+        test("should return true if some glob match", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "04-glob-match.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -59,9 +59,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should check changes for each commits in build", () => {
+        test("should check changes for each commits in build", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "05-multi-commit-build.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -73,9 +73,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should allow empty access token for public repos", () => {
+        test("should allow empty access token for public repos", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "06-no-access-token.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -87,9 +87,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should include hidden files (starting with a dot) in the match", () => {
+        test("should include hidden files (starting with a dot) in the match", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "07-include-hidden-files.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -101,9 +101,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should include files with unicode characters in the match", () => {
+        test("should include files with unicode characters in the match", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "08-include-unicode-names.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -117,9 +117,9 @@ describe("vsts-changed-files-multibranch", () => {
     });
 
     describe("inputs", () => {
-        test("variable: allow to change output variable name", () => {
+        test("variable: allow to change output variable name", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "10-input-variable.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -131,9 +131,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("isOutput: allow to determine if it's an output variable", () => {
+        test("isOutput: allow to determine if it's an output variable", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "11-input-is-output.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -147,9 +147,9 @@ describe("vsts-changed-files-multibranch", () => {
     });
 
     describe("multiple variables", () => {
-        test("should allow multiple variable definitions", () => {
+        test("should allow multiple variable definitions", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "20-multivar-with-default.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -163,9 +163,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should not set default variable if empty", () => {
+        test("should not set default variable if empty", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "21-multivar-without-default.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -182,9 +182,9 @@ describe("vsts-changed-files-multibranch", () => {
             expect(tr.stderr).toBeFalsy();
         });
 
-        test("should not set variables with no rules", () => {
+        test("should not set variables with no rules", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "22-multivar-filter-empty.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 
@@ -203,9 +203,9 @@ describe("vsts-changed-files-multibranch", () => {
     });
 
     describe("multiple branches", () => {
-        test("should check diff between branches", () => {
+        test("should check diff between branches", async () => {
             const tr = new ttm.MockTestRunner(path.join(__dirname, "30-multibranch-ref-branch.runner.js"));
-            tr.run();
+            await tr.runAsync();
 
             expect(tr.succeeded).toBe(true);
 

@@ -10,8 +10,8 @@
   "author": "Touchify",
   "version": {
     "Major": 1,
-    "Minor": 3,
-    "Patch": 0
+    "Minor": 2,
+    "Patch": 3
   },
   "instanceNameFormat": "Check changed files: $(variable)",
   "groups": [
@@ -71,7 +71,7 @@
     }
   ],
   "execution": {
-    "Node18": {
+    "Node20_1": {
       "target": "index.js"
     }
   }
