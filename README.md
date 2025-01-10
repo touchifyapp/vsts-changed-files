@@ -10,7 +10,6 @@ Pipeline task to get changed files and apply conditions according to those chang
 > 
 > - If you're using a self-hosted Azure Agent prior to `v3.224.1`, **please stick on version 1**.
 > - If you're using an `Azure hosted Azure Agent` or a self-hosted Azure Agent upgraded to `v3.224.1` or above, **please upgrade to version 2** to ensure you're on the latest execution environment.
-```
 
 ## Installation
 
