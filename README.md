@@ -4,6 +4,14 @@
 
 Pipeline task to get changed files and apply conditions according to those changes.
 
+
+> [!IMPORTANT]
+> This task has been upgraded to latest execution environment *(Node 20 + azure-pipelines-task-lib v4)* to adress security issues and deprecation warnings. **This upgrade has been released in a major version (v2)**.
+> 
+> - If you're using a self-hosted Azure Agent prior to `v3.224.1`, **please stick on version 1**.
+> - If you're using an `Azure hosted Azure Agent` or a self-hosted Azure Agent upgraded to `v3.224.1` or above, **please upgrade to version 2** to ensure you're on the latest execution environment.
+```
+
 ## Installation
 
 Installation can be done using [Visual Studio MarketPlace](https://marketplace.visualstudio.com/items?itemName=touchify.vsts-changed-files).
@@ -21,7 +29,7 @@ jobs:
     pool:
         vmImage: ubuntu-latest
     steps:
-      - task: ChangedFiles@1
+      - task: ChangedFiles@2
         name: CheckChanges
         inputs:
           rules: src/**/*.ts
@@ -44,7 +52,7 @@ jobs:
     pool:
         vmImage: ubuntu-latest
     steps:
-      - task: ChangedFiles@1
+      - task: ChangedFiles@2
         name: CheckChanges
         inputs:
           rules: |
@@ -79,7 +87,7 @@ jobs:
     pool:
         vmImage: ubuntu-latest
     steps:
-      - task: ChangedFiles@1
+      - task: ChangedFiles@2
         name: CheckChanges
         inputs:
           refBranch: master
@@ -117,7 +125,7 @@ stages:
         pool:
           vmImage: ubuntu-latest
         steps:
-          - task: ChangedFiles@1
+          - task: ChangedFiles@2
             name: CheckChanges
             inputs:
               refBranch: main 
@@ -182,7 +190,7 @@ jobs:
       - checkout: self
         fetchDepth: "0"
         
-      - task: ChangedFiles@1
+      - task: ChangedFiles@2
         name: CheckChanges
         inputs:
           rules: src/**/*.ts
