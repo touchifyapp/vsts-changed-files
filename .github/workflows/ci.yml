@@ -4,7 +4,13 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [10, 16, 20]
+
+    name: Test Node ${{ matrix.node }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
@@ -21,3 +27,4 @@ jobs:
       run: npm run test -- --ci
       env:
         CI: true
+        TEST_NODE_VERSION: ${{ matrix.node }}
