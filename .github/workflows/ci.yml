@@ -4,7 +4,22 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        agent: 
+          - version: Node10
+            env: { AGENT_USE_NODE10: true }
+          - version: Node16
+            env: { AGENT_USE_NODE16: true }
+          - version: Node18
+            env: { AGENT_USE_NODE18: true }
+          - version: Node20_1
+            env: { AGENT_USE_NODE20_1: true }
+
+    name: Test ${{ matrix.agent.version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    env: ${{ matrix.agent.env}}
 
     steps:
     - uses: actions/checkout@v2
